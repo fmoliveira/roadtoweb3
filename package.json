@@ -1,0 +1,12 @@
+{
+	"name": "roadtoweb3",
+	"version": "1.0.0",
+	"main": "index.js",
+	"repository": "git@github.com:fmoliveira/roadtoweb3.git",
+	"author": "Filipe Oliveira <hi@fmoliveira.dev>",
+	"license": "MIT",
+	"private": true,
+	"packages": [
+		"week*"
+	]
+}
