@@ -1,4 +1,4 @@
-import { ethers } from "ethers"
+import { ethers, providers } from "ethers"
 import { useEffect, useState } from "react"
 
 import BuyMeACoffee from "../data/BuyMeACoffee.json"
@@ -24,18 +24,12 @@ type CoffeeQueries = {
 
 type CoffeeMutations = {
 	connect: () => void
+	buyCoffee: (name: string, message: string, value: number) => void
 }
 
 type CoffeeApi = [CoffeeQueries, CoffeeMutations]
 
 export default function useCoffeeApi(contractAddress: string): CoffeeApi {
-	const provider = new ethers.providers.Web3Provider(window.ethereum)
-	const contract = new ethers.Contract(
-		contractAddress,
-		BuyMeACoffee.abi,
-		provider
-	)
-
 	const [address, setAddress] = useState("")
 	const [network, setNetwork] = useState("")
 	const [status, setStatus] = useState(CoffeeStatus.NOT_CONNECTED)
@@ -59,6 +53,14 @@ export default function useCoffeeApi(contractAddress: string): CoffeeApi {
 				setStatus(CoffeeStatus.ERROR_CONNECT_WALLET)
 			}
 		},
+		buyCoffee: async (name: string, message: string, value: number) => {
+			if (value < 0) {
+				throw new Error("Tip value must be positive")
+			}
+			getWritableContract(contractAddress).buyCoffee(name, message, {
+				value: ethers.utils.parseEther(value.toString()),
+			})
+		},
 	}
 
 	return [queries, mutations]
@@ -66,6 +68,24 @@ export default function useCoffeeApi(contractAddress: string): CoffeeApi {
 
 function getProvider(): ethers.providers.Web3Provider {
 	return new ethers.providers.Web3Provider(window.ethereum)
+}
+
+function getContract(
+	contractAddress: string,
+	provider: ethers.providers.Provider = getProvider(),
+): ethers.Contract {
+	return new ethers.Contract(contractAddress, BuyMeACoffee.abi, provider)
+}
+
+function getWritableContract(
+	contractAddress: string,
+	provider: ethers.providers.JsonRpcProvider = getProvider(),
+): ethers.Contract {
+	return new ethers.Contract(
+		contractAddress,
+		BuyMeACoffee.abi,
+		provider.getSigner(),
+	)
 }
 
 async function getAddress(): Promise<string> {
