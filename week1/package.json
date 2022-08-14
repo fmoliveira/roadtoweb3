@@ -1,0 +1,11 @@
+{
+	"name": "week1",
+	"version": "1.0.0",
+	"main": "index.js",
+	"author": "Filipe Oliveira",
+	"license": "MIT",
+	"private": true,
+	"devDependencies": {
+		"@openzeppelin/contracts": "4.7.2"
+	}
+}
