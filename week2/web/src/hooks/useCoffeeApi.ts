@@ -22,9 +22,11 @@ type CoffeeQueries = {
 	status: CoffeeStatus
 }
 
+type BuyCoffeeParams = { name: string; message: string; value: number }
+
 type CoffeeMutations = {
 	connect: () => void
-	buyCoffee: (name: string, message: string, value: number) => void
+	buyCoffee: (params: BuyCoffeeParams) => void
 }
 
 type CoffeeApi = [CoffeeQueries, CoffeeMutations]
@@ -53,7 +55,7 @@ export default function useCoffeeApi(contractAddress: string): CoffeeApi {
 				setStatus(CoffeeStatus.ERROR_CONNECT_WALLET)
 			}
 		},
-		buyCoffee: async (name: string, message: string, value: number) => {
+		buyCoffee: async ({ name, message, value }: BuyCoffeeParams) => {
 			if (value < 0) {
 				throw new Error("Tip value must be positive")
 			}

@@ -1,12 +1,13 @@
 import { FormProvider, useForm } from "react-hook-form"
 
 import Button from "./Button"
+import Form from "./Form"
 import FormField from "./FormField"
 import Input from "./Input"
 import TextArea from "./TextArea"
 
 type Props = {
-	onBuyCoffee: (name: string, message: string, value: number) => void
+	onBuyCoffee: (values: FormData) => void
 }
 
 type FormData = {
@@ -17,17 +18,10 @@ type FormData = {
 
 export default function BuyCoffee({ onBuyCoffee }: Props) {
 	const form = useForm<FormData>()
-	const { handleSubmit } = form
-	const onSubmit = ({ name, message, value }: FormData) => {
-		onBuyCoffee(name, message, value)
-	}
 
 	return (
 		<FormProvider {...form}>
-			<form
-				className="mx-auto p-4 w-full max-w-lg flex flex-col gap-3"
-				onSubmit={handleSubmit(onSubmit)}
-			>
+			<Form onSubmit={form.handleSubmit(onBuyCoffee)}>
 				<FormField name="name" label="Your name">
 					<Input name="name" required={true} />
 				</FormField>
@@ -40,7 +34,7 @@ export default function BuyCoffee({ onBuyCoffee }: Props) {
 				<FormField>
 					<Button type="submit">☕️ Buy Coffee</Button>
 				</FormField>
-			</form>
+			</Form>
 		</FormProvider>
 	)
 }
