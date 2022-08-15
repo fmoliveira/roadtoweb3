@@ -26,7 +26,13 @@ export default function BuyCoffee({ onBuyCoffee }: Props) {
 					<Input name="name" required={true} />
 				</FormField>
 				<FormField name="value" label="Tip amount">
-					<Input name="value" type="number" required={true} />
+					<Input
+						name="value"
+						type="number"
+						min={0.001}
+						max={100}
+						required={true}
+					/>
 				</FormField>
 				<FormField name="message" label="Your message">
 					<TextArea name="message" required={true} />

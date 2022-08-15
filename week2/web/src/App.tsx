@@ -1,4 +1,7 @@
+import { useQuery } from "@tanstack/react-query"
+
 import BuyCoffee from "./components/BuyCoffee"
+import Guestbook from "./components/Guestbook"
 import Header from "./components/Header"
 import Layout from "./components/Layout"
 import Wallet from "./components/Wallet"
@@ -8,10 +11,14 @@ const CONTRACT_ADDRESS: string = "0xdC743fb62977B1b3b69459CA9797CDB01e733c31"
 
 export default function App() {
 	const [queries, mutations] = useCoffeeApi(CONTRACT_ADDRESS)
+	const { data } = useQuery(
+		["memos", queries.address, queries.network, queries.status],
+		queries.getMemos,
+	)
 
 	return (
 		<Layout>
-			<Header />
+			<Header as="h1">Buy Filipe a coffee :)</Header>
 			<Wallet
 				address={queries.address}
 				network={queries.network}
@@ -21,6 +28,8 @@ export default function App() {
 			{queries.status === CoffeeStatus.CONNECTED && (
 				<BuyCoffee onBuyCoffee={mutations.buyCoffee} />
 			)}
+			<Header as="h2">My Guestbook</Header>
+			<Guestbook memos={data} />
 		</Layout>
 	)
 }

@@ -5,7 +5,7 @@ type Props = {
 }
 
 function Layout({ children }: Props) {
-	return <div className="my-20 mx-auto max-w-2xl">{children}</div>
+	return <div className="my-10 mx-auto max-w-2xl">{children}</div>
 }
 
 export default Layout

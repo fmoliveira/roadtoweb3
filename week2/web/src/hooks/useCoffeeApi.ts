@@ -16,10 +16,19 @@ export enum CoffeeStatus {
 	CONNECTED = "CONNECTED",
 }
 
+type Memo = {
+	_id: string
+	timestamp: Date
+	address: string
+	name: string
+	message: string
+}
+
 type CoffeeQueries = {
 	address: string
 	network: string
 	status: CoffeeStatus
+	getMemos: () => Promise<Memo[]>
 }
 
 type BuyCoffeeParams = { name: string; message: string; value: number }
@@ -44,7 +53,23 @@ export default function useCoffeeApi(contractAddress: string): CoffeeApi {
 		}
 	}, [isWindowFocused])
 
-	const queries = { address, network, status }
+	const getMemos = (): Promise<Memo[]> => {
+		return getContract(contractAddress)
+			.getMemos()
+			.then((memos: Array<Record<string, any>>) => {
+				return memos
+					.map((memo: Record<string, any>) => ({
+						...memo,
+						_id: [memo.address, memo.timestamp.toString()].join("_"),
+						timestamp: new Date(
+							Number.parseInt(memo.timestamp.toString(), 10) * 1000,
+						),
+					}))
+					.reverse()
+			})
+	}
+
+	const queries = { address, network, status, getMemos }
 
 	const mutations = {
 		connect: async () => {
@@ -59,9 +84,14 @@ export default function useCoffeeApi(contractAddress: string): CoffeeApi {
 			if (value < 0) {
 				throw new Error("Tip value must be positive")
 			}
-			getWritableContract(contractAddress).buyCoffee(name, message, {
-				value: ethers.utils.parseEther(value.toString()),
-			})
+			const transaction = await getWritableContract(contractAddress).buyCoffee(
+				name,
+				message,
+				{
+					value: ethers.utils.parseEther(value.toString()),
+				},
+			)
+			await transaction.wait()
 		},
 	}
 
