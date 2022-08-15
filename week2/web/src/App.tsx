@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 
 import BuyCoffee from "./components/BuyCoffee"
 import Guestbook from "./components/Guestbook"
@@ -15,6 +15,7 @@ export default function App() {
 		["memos", queries.address, queries.network, queries.status],
 		queries.getMemos,
 	)
+	const buyCoffee = useMutation(mutations.buyCoffee)
 
 	return (
 		<Layout>
@@ -26,7 +27,11 @@ export default function App() {
 				onConnect={mutations.connect}
 			/>
 			{queries.status === CoffeeStatus.CONNECTED && (
-				<BuyCoffee onBuyCoffee={mutations.buyCoffee} />
+				<BuyCoffee
+					isLoading={buyCoffee.isLoading}
+					isSuccess={buyCoffee.isSuccess}
+					onBuyCoffee={(values) => buyCoffee.mutate(values)}
+				/>
 			)}
 			<Header as="h2">My Guestbook</Header>
 			<Guestbook memos={data} />

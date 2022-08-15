@@ -31,11 +31,15 @@ type CoffeeQueries = {
 	getMemos: () => Promise<Memo[]>
 }
 
-type BuyCoffeeParams = { name: string; message: string; value: number }
+type BuyCoffeeParams = {
+	name: string
+	message: string
+	value: number
+}
 
 type CoffeeMutations = {
 	connect: () => void
-	buyCoffee: (params: BuyCoffeeParams) => void
+	buyCoffee: (params: BuyCoffeeParams) => Promise<void>
 }
 
 type CoffeeApi = [CoffeeQueries, CoffeeMutations]
