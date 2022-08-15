@@ -28,6 +28,7 @@ type CoffeeQueries = {
 	address: string
 	network: string
 	status: CoffeeStatus
+	lastUpdate: number | null
 	getMemos: () => Promise<Memo[]>
 }
 
@@ -48,6 +49,7 @@ export default function useCoffeeApi(contractAddress: string): CoffeeApi {
 	const [address, setAddress] = useState("")
 	const [network, setNetwork] = useState("")
 	const [status, setStatus] = useState(CoffeeStatus.NOT_CONNECTED)
+	const [lastUpdate, setLastUpdate] = useState<number | null>(null)
 
 	const isWindowFocused = useWindowFocus()
 	useEffect(() => {
@@ -73,7 +75,7 @@ export default function useCoffeeApi(contractAddress: string): CoffeeApi {
 			})
 	}
 
-	const queries = { address, network, status, getMemos }
+	const queries = { address, network, status, lastUpdate, getMemos }
 
 	const mutations = {
 		connect: async () => {
@@ -96,6 +98,7 @@ export default function useCoffeeApi(contractAddress: string): CoffeeApi {
 				},
 			)
 			await transaction.wait()
+			setLastUpdate(Date.now())
 		},
 	}
 
