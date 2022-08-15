@@ -1,7 +1,9 @@
-import { useForm } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 
 import Button from "./Button"
 import FormField from "./FormField"
+import Input from "./Input"
+import TextArea from "./TextArea"
 
 type Props = {
 	onBuyCoffee: (name: string, message: string, value: number) => void
@@ -14,28 +16,31 @@ type FormData = {
 }
 
 export default function BuyCoffee({ onBuyCoffee }: Props) {
-	const { register, handleSubmit } = useForm<FormData>()
+	const form = useForm<FormData>()
+	const { handleSubmit } = form
 	const onSubmit = ({ name, message, value }: FormData) => {
 		onBuyCoffee(name, message, value)
 	}
 
 	return (
-		<form
-			className="mx-auto p-4 w-full max-w-lg flex flex-col gap-3"
-			onSubmit={handleSubmit(onSubmit)}
-		>
-			<FormField name="name" label="Your name">
-				<input className="w-full" type="text" {...register("name")} />
-			</FormField>
-			<FormField name="value" label="Tip amount">
-				<input className="w-full" type="text" {...register("value")} />
-			</FormField>
-			<FormField name="message" label="Your message">
-				<textarea className="w-full" {...register("message")}></textarea>
-			</FormField>
-			<FormField>
-				<Button type="submit">☕️ Buy Coffee</Button>
-			</FormField>
-		</form>
+		<FormProvider {...form}>
+			<form
+				className="mx-auto p-4 w-full max-w-lg flex flex-col gap-3"
+				onSubmit={handleSubmit(onSubmit)}
+			>
+				<FormField name="name" label="Your name">
+					<Input name="name" />
+				</FormField>
+				<FormField name="value" label="Tip amount">
+					<Input name="value" type="number" />
+				</FormField>
+				<FormField name="message" label="Your message">
+					<TextArea name="message" />
+				</FormField>
+				<FormField>
+					<Button type="submit">☕️ Buy Coffee</Button>
+				</FormField>
+			</form>
+		</FormProvider>
 	)
 }
