@@ -8,6 +8,7 @@ import Input from "./Input"
 import TextArea from "./TextArea"
 
 type Props = {
+	disabled?: boolean
 	isLoading?: boolean
 	isSuccess?: boolean
 	onBuyCoffee: (values: FormData) => void
@@ -20,6 +21,7 @@ type FormData = {
 }
 
 export default function BuyCoffee({
+	disabled,
 	isLoading,
 	isSuccess,
 	onBuyCoffee,
@@ -36,10 +38,14 @@ export default function BuyCoffee({
 		<FormProvider {...form}>
 			<Form onSubmit={form.handleSubmit(onBuyCoffee)}>
 				<FormField name="name" label="Your name">
-					<Input name="name" required={true} disabled={isLoading} />
+					<Input name="name" required={true} disabled={disabled || isLoading} />
 				</FormField>
 				<FormField name="message" label="Your message">
-					<TextArea name="message" required={true} disabled={isLoading} />
+					<TextArea
+						name="message"
+						required={true}
+						disabled={disabled || isLoading}
+					/>
 				</FormField>
 				<FormField name="value" label="Tip amount">
 					<Input
@@ -49,11 +55,11 @@ export default function BuyCoffee({
 						step={0.001}
 						required={true}
 						defaultValue={0.001}
-						disabled={isLoading}
+						disabled={disabled || isLoading}
 					/>
 				</FormField>
 				<FormField>
-					<Button type="submit" disabled={isLoading}>
+					<Button type="submit" disabled={disabled || isLoading}>
 						{!isLoading && "☕️ Buy Coffee"}
 						{isLoading && "Please wait..."}
 					</Button>

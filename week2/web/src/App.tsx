@@ -34,6 +34,7 @@ export default function App() {
 			/>
 			{queries.status === CoffeeStatus.CONNECTED && (
 				<BuyCoffee
+					disabled={queries.network !== "goerli"}
 					isLoading={buyCoffee.isLoading}
 					isSuccess={buyCoffee.isSuccess}
 					onBuyCoffee={(values) => buyCoffee.mutate(values)}
