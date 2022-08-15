@@ -1,5 +1,5 @@
 import { useFormContext } from "react-hook-form"
-import { inputClassNames } from "./Input"
+import { getInputClassNames } from "./Input"
 
 type TextAreaProps = React.DetailedHTMLProps<
 	React.TextareaHTMLAttributes<HTMLTextAreaElement>,
@@ -11,11 +11,12 @@ type Props = Omit<TextAreaProps, "className" | "style"> & {
 }
 
 export default function TextArea({ name, ...props }: Props) {
-	const { register } = useFormContext()
+	const { register, formState } = useFormContext()
+	const hasError: boolean = formState.errors[name]?.message !== undefined
 
 	return (
 		<textarea
-			className={inputClassNames}
+			className={getInputClassNames(hasError)}
 			{...props}
 			{...register(name)}
 		></textarea>

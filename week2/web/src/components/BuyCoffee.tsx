@@ -29,13 +29,13 @@ export default function BuyCoffee({ onBuyCoffee }: Props) {
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<FormField name="name" label="Your name">
-					<Input name="name" />
+					<Input name="name" required={true} />
 				</FormField>
 				<FormField name="value" label="Tip amount">
-					<Input name="value" type="number" />
+					<Input name="value" type="number" required={true} />
 				</FormField>
 				<FormField name="message" label="Your message">
-					<TextArea name="message" />
+					<TextArea name="message" required={true} />
 				</FormField>
 				<FormField>
 					<Button type="submit">☕️ Buy Coffee</Button>
